@@ -4,10 +4,14 @@ import { useFormik } from "formik";
 import { signinUserSchema } from "@/Validations/SigninUserValidation";
 import { useRouter } from "next/router";
 import { UserIdContext } from "@/context/UserIdContext";
+import { isLoginVisibleContext } from "@/context/LoginVisiblity";
+import Cookie from "js-cookie";
 
 export const Loginbar = () => {
   const router = useRouter();
-  const { userId, setUserId } = useContext(UserIdContext);
+  const { isLoginVisible, setIsLoginVisible } = useContext(
+    isLoginVisibleContext
+  );
   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: {
       email: "",
@@ -18,15 +22,18 @@ export const Loginbar = () => {
   });
   const signIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (errors.email && errors.password) return alert("Not valid");
     try {
       const user = {
         email: values.email,
         password: values.password,
       };
       const res = await instance.post("/login", user);
-      if (res.status === 205) alert("User Not Found");
-      if (res.status === 206) alert("Wrong Password!");
-      setUserId(res.data.message);
+      if (res.status === 205) return alert("User Not Found");
+      if (res.status === 206) return alert("Wrong Password!");
+      setIsLoginVisible(false);
+      console.log(res);
+      return alert("successfully login");
     } catch (error) {
       console.error("error in login", error);
     }
@@ -34,7 +41,7 @@ export const Loginbar = () => {
   return (
     <form
       onSubmit={(e) => signIn(e)}
-      className="flex flex-col w-1/3 mt-64 h-96 justify-center items-center my-96 gap-8 z-30"
+      className="flex flex-col w-1/3 h-fit px-8 py-16 rounded-lg justify-center items-center gap-8 absolute bg-white z-30"
     >
       <p className="text-black font-semibold text-3xl">Нэвтрэх</p>
       <div className="flex flex-col justify-center items-center gap-4">

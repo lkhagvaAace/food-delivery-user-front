@@ -12,10 +12,12 @@ const Login = (props: Props) => {
     isBasketBarVisibleContext
   );
   return (
-    <div className="bg-white min-h-screen flex flex-col items-center justify-between gap-8">
+    <div className="bg-white min-h-screen flex flex-col justify-between gap-8">
       <Header />
       {isBasketBarVisible === true ? <Basket /> : null}
-      <Loginbar />
+      <div className="flex justify-center w-full h-96 mb-64">
+        <Loginbar />
+      </div>
       <Footer />
     </div>
   );

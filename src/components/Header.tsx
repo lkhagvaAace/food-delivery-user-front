@@ -5,11 +5,13 @@ import { Logo } from "../svg/Logo";
 import { isBasketBarVisibleContext } from "@/context/BasketContext";
 import { useRouter } from "next/router";
 import { isLoginVisibleContext } from "@/context/LoginVisiblity";
+import { UserIdContext } from "@/context/UserIdContext";
 
 type Props = {};
 
 export const Header = (props: Props) => {
   const router = useRouter();
+  const { userId, setUserId } = useContext(UserIdContext);
   const { isBasketBarVisible, setIsBasketBarVisible } = useContext(
     isBasketBarVisibleContext
   );
@@ -57,13 +59,21 @@ export const Header = (props: Props) => {
           <p className="text-black font-semibold">Сагс</p>
         </button>
         <button
-          onClick={() => setIsLoginVisible(true)}
+          onClick={() => {
+            if (userId === "") {
+              setIsLoginVisible(true);
+            } else {
+              router.push("/profile");
+            }
+          }}
           className="flex gap-4 justify-center items-center"
         >
           <div className="w-12 h-12">
             <Profile />
           </div>
-          <p className="text-black font-semibold">Нэвтрэх</p>
+          <p className="text-black font-semibold">
+            {userId === "" ? "Нэвтрэх" : "Хэрэглэгч"}
+          </p>
         </button>
       </div>
     </div>

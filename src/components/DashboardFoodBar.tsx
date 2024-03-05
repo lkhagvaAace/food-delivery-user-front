@@ -4,10 +4,15 @@ import { isFoodDetailVisibleContext } from "@/context/FDVisiblityContext";
 import { FoodInfoContext } from "@/context/FoodDetail";
 import { Food } from "@/types/foodType";
 import { getFoods } from "@/utilities/getFoods";
+import { isLoginVisibleContext } from "@/context/LoginVisiblity";
+import { Loginbar } from "./Loginbar";
 
 export const DashboardFoodBar = () => {
   const { isFoodDetailVisible, setIsFoodDetailVisible } = useContext(
     isFoodDetailVisibleContext
+  );
+  const { isLoginVisible, setIsLoginVisible } = useContext(
+    isLoginVisibleContext
   );
   const [foods, setFoods] = useState<Food[]>([]);
   const { foodInfo, setFoodInfo } = useContext(FoodInfoContext);
@@ -18,9 +23,8 @@ export const DashboardFoodBar = () => {
     getFoods(setFoodsFromDB);
   }, []);
   return (
-    <div
-      className={`flex flex-wrap gap-8 w-11/12 min-h-screen justify-evenly my-8`}
-    >
+    <div className="flex w-full h-fit justify-start px-32 flex-wrap gap-16 my-16 ml-24">
+      {isLoginVisible === true && <Loginbar />}
       {foods.length > 0 &&
         foods?.map((el) => {
           return (
@@ -29,21 +33,18 @@ export const DashboardFoodBar = () => {
                 setIsFoodDetailVisible(true);
                 setFoodInfo(el);
               }}
-              className="w-1/4 flex flex-col gap-2 text-black relative"
+              className="w-1/5 flex flex-col gap-2 text-black relative"
             >
-              {el.isSale.isSale && (
+              {/* {el.isSale.isSale && (
                 <div className="flex justify-end w-full h-fit absolute">
                   <div className="absolute bg-green-500 text-white font-semibold w-fit h-fit p-2 rounded-xl mt-2 mr-2 border-[1px] border-solid border-white">
                     {el.isSale.salePercent}%
                   </div>
                 </div>
-              )}
-              <img
-                src=""
-                className="w-full h-48 border-2 border-solid border-red-500 rounded-lg"
-              />
+              )} */}
+              <img src={`${el.img}`} className="w-full h-48 rounded-lg" />
               <p className="font-bold text-xl">{el.name}</p>
-              <div className="text-green-500 font-semibold">
+              {/* <div className="text-green-500 font-semibold">
                 {el.isSale.isSale ? (
                   <div className="flex gap-2">
                     <p>{(el.price / 100) * (100 - el.isSale.salePercent)}₮</p>
@@ -54,7 +55,8 @@ export const DashboardFoodBar = () => {
                 ) : (
                   <p>{el.price}</p>
                 )}
-              </div>
+              </div> */}
+              <p>{el.price}</p>
             </button>
           );
         })}

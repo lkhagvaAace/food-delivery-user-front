@@ -13,5 +13,6 @@ export type Food = {
         salePercent: number;
       };
   img: string;
+  ingredients: string;
   count: number;
 };

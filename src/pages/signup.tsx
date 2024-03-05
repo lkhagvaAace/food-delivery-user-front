@@ -4,17 +4,13 @@ import React from "react";
 import { signupUserSchema } from "@/Validations/SignupUserValidation";
 import { useFormik } from "formik";
 import { createUser } from "@/utilities/createUser";
+import { SignupFormValues } from "@/types/signupType";
+import { useRouter } from "next/router";
 
 type Props = {};
 
-type SignupFormValues = {
-  email: string;
-  name: string;
-  password: string;
-  confirmPassword: string;
-};
-
 const Signup = (props: Props) => {
+  const router = useRouter();
   const { values, errors, handleBlur, handleChange, handleSubmit } =
     useFormik<SignupFormValues>({
       initialValues: {
@@ -26,11 +22,19 @@ const Signup = (props: Props) => {
       validationSchema: signupUserSchema,
       onSubmit: async () => {},
     });
+  const creatingUser = async (e: React.FormEvent<HTMLFormElement>) => {
+    const status = await createUser(e, values);
+    if (status != 201) {
+      return alert("Failed to sign up");
+    }
+    alert("Successfully signed up");
+    return router.push("/login");
+  };
   return (
     <div className="bg-white flex flex-col items-center justify-between gap-8 min-h-screen">
       <Header />
       <form
-        onSubmit={(e) => createUser(e)}
+        onSubmit={creatingUser}
         className="flex flex-col w-1/3 h-fit justify-center items-center my-16 gap-8"
       >
         <p className="text-black font-semibold text-3xl">Бүртгүүлэх</p>

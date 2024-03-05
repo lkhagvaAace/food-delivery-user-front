@@ -37,7 +37,7 @@ export const FooddetailBar = () => {
     }
   };
   return (
-    <div className="absolute z-3 flex justify-center items-center w-full h-full bg-white">
+    <div className="absolute z-30 flex justify-center items-center w-full h-full">
       <div className="w-2/3 h-fit py-8 bg-white rounded-lg items-center flex justify-between gap-8 px-8 absolute z-4">
         <img src={`${foodInfo?.img}`} className="w-1/2 h-full" />
         <div className="flex flex-col w-full gap-4 items-end">
@@ -60,7 +60,7 @@ export const FooddetailBar = () => {
             <div className="w-full flex flex-col gap-4">
               <label className="text-sm font-semibold text-black">Орц</label>
               <div className="flex justify-center items-center bg-gray-200 text-gray-500 rounded-lg p-4">
-                Хоолны дэлгэрэнгүй
+                {foodInfo?.ingredients}
               </div>
             </div>
             <div className="w-full flex flex-col gap-4">

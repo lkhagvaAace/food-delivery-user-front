@@ -15,9 +15,9 @@ import { DashboardFoodBar } from "@/components/DashboardFoodBar";
 type Props = {};
 
 const Index = (props: Props) => {
-  const { isBasketBarVisible, setIsBasketBarVisible } = useContext(
-    isBasketBarVisibleContext
-  );
+  // const { isBasketBarVisible, setIsBasketBarVisible } = useContext(
+  //   isBasketBarVisibleContext
+  // );
   const { isFoodDetailVisible, setIsFoodDetailVisible } = useContext(
     isFoodDetailVisibleContext
   );
@@ -29,7 +29,7 @@ const Index = (props: Props) => {
     <div
       className={`bg-white min-h-screen flex flex-col items-center justify-between w-full relative`}
     >
-      {isBasketBarVisible === true && selectedFoods ? <Basket /> : false}
+      {/* {isBasketBarVisible === true && selectedFoods ? <Basket /> : false} */}
       {isFoodDetailVisible === true ? <FooddetailBar /> : false}
       {isLoginVisible === true ? <Loginbar /> : false}
       <Header />

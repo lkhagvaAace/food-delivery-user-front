@@ -82,10 +82,9 @@ export const Basket = () => {
       console.error(error);
     }
   };
-  console.log(userId);
   return (
-    <div className="absolute z-1 flex justify-end w-full h-full bg-gray-100">
-      <div className="absolute z-2 flex flex-col bg-white items-center justify-between w-1/3 px-8 rounded-lg min-h-screen border-[1px] border-solid border-black">
+    <div className="absolute z-30 flex justify-end w-full h-full">
+      <div className="absolute z-30 flex flex-col bg-white items-center justify-between w-1/3 px-8 rounded-lg min-h-screen border-[1px] border-solid border-black">
         <div className="flex flex-col w-full">
           <div className="flex justify-between items-center p-2 pr-12">
             <button onClick={() => setIsBasketBarVisible(false)}>

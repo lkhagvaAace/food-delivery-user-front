@@ -1,12 +1,13 @@
 import { instance } from "@/Instance";
 import { emailSchema } from "@/Validations/emailSchema";
+import axios from "axios";
 import { useFormik } from "formik";
 import React from "react";
 type StateType = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const RepasswordStepOne = ({ setStep }: StateType) => {
+export const RepasswordStepOne = ({ setStep, setCode }: any) => {
   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: {
       email: "",
@@ -18,20 +19,21 @@ export const RepasswordStepOne = ({ setStep }: StateType) => {
     e.preventDefault();
     try {
       if (errors.email) return false;
-      // const res = await instance.post("/changePassword", mail);
-      // const res = await axios.post(
-      //   "http://localhost:3005/changePassword",
-      //   mail
-      // );
+      const mail = {
+        email: values.email,
+      };
+      // const res = await instance.post("/verifyEmail", mail);
+      // const res = await axios.post("http://localhost:3005/verifyEmail", mail);
       const res = await fetch("http://localhost:3005/verifyEmail", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: values.email }),
+        body: JSON.stringify(mail),
       });
       if (res.status === 404) {
         return alert("User Not Found");
       }
-      setStep(2);
+      console.log(res.text);
+      return setStep(2);
     } catch (error) {
       console.error("error in verifyEmail", error);
     }

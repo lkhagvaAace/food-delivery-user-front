@@ -1,32 +1,60 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { data } from "./Mock";
 import { FoodInfoContext } from "@/context/FoodDetail";
 import { isFoodDetailVisibleContext } from "@/context/FDVisiblityContext";
+import { Food } from "@/types/foodType";
+import { getFoods } from "@/utilities/getFoods";
 
-export const MenuFoodBar = () => {
+export const MenuFoodBar = ({ selectedCategory }: any) => {
   const { isFoodDetailVisible, setIsFoodDetailVisible } = useContext(
     isFoodDetailVisibleContext
   );
-  const { foodInfo, setFoodInfo } = useContext(FoodInfoContext);
+  const [foods, setFoods] = useState<Food[]>([]);
+  const [domFoods, setDomFoods] = useState<Food[]>([]);
+  const setFoodsFromDB = (data: Food[]) => {
+    setFoods(data);
+    setDomFoods(data);
+  };
+  useEffect(() => {
+    getFoods(setFoodsFromDB);
+  }, []);
+  const filteringbByCategory = useMemo(async () => {
+    const filteredFoods = foods.filter(
+      (el: Food) => el.category === selectedCategory
+    );
+    setDomFoods(filteredFoods);
+  }, [selectedCategory]);
   return (
-    <div className="flex flex-wrap gap-8 w-11/ min-h-screen justify-center items-center my-8">
-      {data?.map((el) => {
-        return (
-          <button
-            onClick={() => {
-              // setFoodInfo(el);
-              setIsFoodDetailVisible(true);
-            }}
-            className="w-1/5 flex flex-col justify-center gap-2 text-black"
-          >
-            <img src={`${el.img}`} />
-            <p className="text-xl font-semibold">{el.foodName}</p>
-            <p className="text-xl font-semibold text-green-500">
-              {el.price.toLocaleString()}₮
-            </p>
-          </button>
-        );
-      })}
+    <div className="flex w-full h-fit justify-start flex-wrap gap-16 pl-36">
+      {domFoods.length > 0 &&
+        domFoods.map((el) => {
+          return (
+            <button className="text-black w-[300px] h-64 rounded-lg flex flex-col gap-2 relative">
+              {el.isSale && (
+                <div className="flex justify-end w-full h-fit absolute">
+                  <div className="absolute bg-green-500 text-white font-semibold w-fit h-fit p-2 rounded-xl mt-2 mr-2 border-[1px] border-solid border-white">
+                    {/* {el.isSale.salePercent}% */}
+                  </div>
+                </div>
+              )}
+              <img src={`${el.img}`} className="w-full h-48 rounded-lg" />
+              <p className="font-bold text-xl">{el.name}</p>
+              <div className="text-green-500 font-semibold">
+                {/* {el.isSale.isSale ? (
+                <div className="flex gap-2">
+                  <p>{(el.price / 100) * (100 - el.isSale.salePercent)}₮</p>
+                  <p className="line-through text-black">
+                    {el.price.toLocaleString()}₮
+                  </p>
+                </div>
+              ) : (
+                <p>{el.price}</p>
+              )} */}
+                <p>{el.price}</p>
+              </div>
+            </button>
+          );
+        })}
     </div>
   );
 };
