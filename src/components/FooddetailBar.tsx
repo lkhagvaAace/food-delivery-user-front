@@ -24,17 +24,17 @@ export const FooddetailBar = () => {
     isFoodDetailVisibleContext
   );
   const counting = () => {
-    const coincidenceChecker: Food[] = selectedFoods.filter((el) => {
-      return el._id == foodInfo?._id;
-    });
-    if (coincidenceChecker.length > 0) {
-      const food = selectedFoods.filter((el) => {
-        return el._id == foodInfo?._id;
-      });
-    }
-    if (total != 0) {
-      setSelectedFoods([...selectedFoods, { ...foodInfo, count: total }]);
-    }
+    // const coincidenceChecker: Food[] = selectedFoods.filter((el) => {
+    //   return el._id == foodInfo?._id;
+    // });
+    // if (coincidenceChecker.length > 0) {
+    //   const food = selectedFoods.filter((el) => {
+    //     return el._id == foodInfo?._id;
+    //   });
+    // }
+    // if (total != 0) {
+    //   setSelectedFoods([...selectedFoods, { ...foodInfo, count: total }]);
+    // }
   };
   return (
     <div className="absolute z-30 flex justify-center items-center w-full h-full">

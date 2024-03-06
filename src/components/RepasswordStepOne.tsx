@@ -7,7 +7,7 @@ type StateType = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const RepasswordStepOne = ({ setStep, setCode }: any) => {
+export const RepasswordStepOne = ({ setStep, setCode, setUserId }: any) => {
   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: {
       email: "",
@@ -22,17 +22,12 @@ export const RepasswordStepOne = ({ setStep, setCode }: any) => {
       const mail = {
         email: values.email,
       };
-      // const res = await instance.post("/verifyEmail", mail);
-      // const res = await axios.post("http://localhost:3005/verifyEmail", mail);
-      const res = await fetch("http://localhost:3005/verifyEmail", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(mail),
-      });
+      const res = await instance.post("/verifyEmail", mail);
       if (res.status === 404) {
         return alert("User Not Found");
       }
-      console.log(res.text);
+      setCode(res.data.code);
+      setUserId(res.data._id);
       return setStep(2);
     } catch (error) {
       console.error("error in verifyEmail", error);

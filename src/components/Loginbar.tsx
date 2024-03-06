@@ -3,9 +3,7 @@ import { instance } from "../Instance";
 import { useFormik } from "formik";
 import { signinUserSchema } from "@/Validations/SigninUserValidation";
 import { useRouter } from "next/router";
-import { UserIdContext } from "@/context/UserIdContext";
 import { isLoginVisibleContext } from "@/context/LoginVisiblity";
-import Cookie from "js-cookie";
 
 export const Loginbar = () => {
   const router = useRouter();
@@ -32,7 +30,8 @@ export const Loginbar = () => {
       if (res.status === 205) return alert("User Not Found");
       if (res.status === 206) return alert("Wrong Password!");
       setIsLoginVisible(false);
-      console.log(res);
+      localStorage.setItem("accessToken", res.data.accessToken);
+      router.push("/");
       return alert("successfully login");
     } catch (error) {
       console.error("error in login", error);

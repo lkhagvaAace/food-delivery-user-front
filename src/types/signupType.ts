@@ -3,4 +3,5 @@ export type SignupFormValues = {
   name: string;
   password: string;
   confirmPassword: string;
+  phoneNumber: number;
 };

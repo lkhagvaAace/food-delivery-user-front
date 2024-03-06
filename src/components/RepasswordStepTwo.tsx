@@ -6,6 +6,8 @@ export const RepasswordStepTwo = ({ setStep, code }: any) => {
   const auth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      if (code != authCode) return alert("Wrong code!");
+      return setStep(3);
     } catch (error) {
       console.error(error);
     }
@@ -22,12 +24,17 @@ export const RepasswordStepTwo = ({ setStep, code }: any) => {
           <input
             type="number"
             onChange={(e) => setAuthCode(e.target.value)}
-            placeholder=""
+            placeholder="123456"
             className="bg-gray-200 w-80 h-12 rounded-lg text-black px-4"
           />
         </div>
       </div>
-      <button type="submit" className="bg-green-500 rounded-lg w-80 h-12">
+      <button
+        type="submit"
+        className={`${
+          authCode == "" ? "bg-gray-300" : "bg-green-500"
+        } rounded-lg w-80 h-12`}
+      >
         Үргэлжлүүлэх
       </button>
     </form>

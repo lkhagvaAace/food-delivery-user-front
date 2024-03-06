@@ -18,6 +18,7 @@ const Signup = (props: Props) => {
         name: "",
         password: "",
         confirmPassword: "",
+        phoneNumber: 0,
       },
       validationSchema: signupUserSchema,
       onSubmit: async () => {},

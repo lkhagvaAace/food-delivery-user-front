@@ -10,7 +10,6 @@ export const MenuCategory = ({ setSelectedCategory }: any) => {
   useEffect(() => {
     getCategoriesFromDatabass(getCategoriesFunction);
   }, []);
-  console.log(categories);
   return (
     <div className="w-full h-fit py-8 px-8 justify-evenly flex flex-wrap">
       {categories.length > 0 &&

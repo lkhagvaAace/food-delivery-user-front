@@ -8,14 +8,19 @@ import React, { useState } from "react";
 const Repassword = () => {
   const [step, setStep] = useState(1);
   const [code, setCode] = useState(0);
+  const [userId, setUserId] = useState("");
   return (
     <div className="bg-white flex flex-col items-center justify-between gap-8 min-h-screen">
       <Header />
       {step == 1 ? (
-        <RepasswordStepOne setStep={setStep} setCode={setCode} />
+        <RepasswordStepOne
+          setStep={setStep}
+          setCode={setCode}
+          setUserId={setUserId}
+        />
       ) : null}
       {step == 2 ? <RepasswordStepTwo setStep={setStep} code={code} /> : null}
-      {step == 3 ? <RepasswordStepThree /> : null}
+      {step == 3 ? <RepasswordStepThree userId={userId} /> : null}
       <Footer />
     </div>
   );

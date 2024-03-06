@@ -2,7 +2,6 @@ import { instance } from "@/Instance";
 import { isBasketBarVisibleContext } from "@/context/BasketContext";
 import { OrderContext } from "@/context/OrderContext";
 import { SelectedFoodContext } from "@/context/SelectedFoodContext";
-import { UserIdContext } from "@/context/UserIdContext";
 import { Cancel } from "@/svg/Cancel";
 import { Rightarrow } from "@/svg/Rightarrow";
 import { Food } from "@/types/foodType";
@@ -19,7 +18,6 @@ type ThemContextType = {
 };
 
 export const Basket = () => {
-  const { userId, setUserId } = useContext(UserIdContext);
   const { isBasketBarVisible, setIsBasketBarVisible } = useContext(
     isBasketBarVisibleContext
   );
@@ -66,21 +64,21 @@ export const Basket = () => {
     setTotal(sum);
   }, [selectedFoods]);
   const createOrder = async () => {
-    try {
-      const orderNumber = Math.floor(Math.random() * 100000 + 1);
-      const selectedOrder = {
-        userId: userId,
-        orderNumber: orderNumber,
-        foods: selectedFoods,
-        totalPrice: total,
-        process: "Waiting",
-        createdDate: new Date(),
-      };
-      const res = await instance.post("/createOrder", selectedOrder);
-      console.log("res", res);
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   const orderNumber = Math.floor(Math.random() * 100000 + 1);
+    //   const selectedOrder = {
+    //     userId: userId,
+    //     orderNumber: orderNumber,
+    //     foods: selectedFoods,
+    //     totalPrice: total,
+    //     process: "Waiting",
+    //     createdDate: new Date(),
+    //   };
+    //   const res = await instance.post("/createOrder", selectedOrder);
+    //   console.log("res", res);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
   return (
     <div className="absolute z-30 flex justify-end w-full h-full">

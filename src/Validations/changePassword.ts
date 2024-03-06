@@ -1,8 +1,6 @@
 import * as yup from "yup";
 const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
-export const signupUserSchema = yup.object().shape({
-  name: yup.string().min(2).max(50).required(),
-  email: yup.string().email().min(5).max(50).required("Email required!"),
+export const passwordSchema = yup.object().shape({
   password: yup
     .string()
     .min(4)
@@ -12,5 +10,4 @@ export const signupUserSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password")], "Password must match")
     .required("Required"),
-  phoneNumber: yup.number().min(70000000).max(99999999),
 });

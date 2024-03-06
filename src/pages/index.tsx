@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Header } from "../components/Header";
 import { Footer } from "@/components/Footer";
 import { isFoodDetailVisibleContext } from "@/context/FDVisiblityContext";
@@ -11,10 +11,12 @@ import { Loginbar } from "@/components/Loginbar";
 import { DashboardFirstSection } from "@/components/DashboardFirstSection";
 import { DashboardCards } from "@/components/DashboardCards";
 import { DashboardFoodBar } from "@/components/DashboardFoodBar";
+import { useRouter } from "next/router";
 
 type Props = {};
 
 const Index = (props: Props) => {
+  const router = useRouter();
   // const { isBasketBarVisible, setIsBasketBarVisible } = useContext(
   //   isBasketBarVisibleContext
   // );

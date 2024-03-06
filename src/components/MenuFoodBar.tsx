@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { data } from "./Mock";
 import { FoodInfoContext } from "@/context/FoodDetail";
 import { isFoodDetailVisibleContext } from "@/context/FDVisiblityContext";
 import { Food } from "@/types/foodType";

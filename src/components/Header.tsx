@@ -1,23 +1,35 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Basket } from "../svg/Basket";
 import { Profile } from "../svg/Profile";
 import { Logo } from "../svg/Logo";
 import { isBasketBarVisibleContext } from "@/context/BasketContext";
 import { useRouter } from "next/router";
 import { isLoginVisibleContext } from "@/context/LoginVisiblity";
-import { UserIdContext } from "@/context/UserIdContext";
 
 type Props = {};
 
 export const Header = (props: Props) => {
   const router = useRouter();
-  const { userId, setUserId } = useContext(UserIdContext);
   const { isBasketBarVisible, setIsBasketBarVisible } = useContext(
     isBasketBarVisibleContext
   );
   const { isLoginVisible, setIsLoginVisible } = useContext(
     isLoginVisibleContext
   );
+  const [token, setToken] = useState<string | null>("");
+  useEffect(() => {
+    if (!localStorage.getItem("accessToken")) return;
+    const accessToken = localStorage.getItem("accessToken");
+    setToken(accessToken);
+  }, []);
+  const checkToken = async () => {
+    try {
+      if (token === "") return setIsLoginVisible(true);
+      router.push("/profile");
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <div className="flex w-11/12 justify-between py-4">
       <nav className="flex items-center gap-16">
@@ -60,11 +72,7 @@ export const Header = (props: Props) => {
         </button>
         <button
           onClick={() => {
-            if (userId === "") {
-              setIsLoginVisible(true);
-            } else {
-              router.push("/profile");
-            }
+            checkToken();
           }}
           className="flex gap-4 justify-center items-center"
         >
@@ -72,7 +80,7 @@ export const Header = (props: Props) => {
             <Profile />
           </div>
           <p className="text-black font-semibold">
-            {userId === "" ? "Нэвтрэх" : "Хэрэглэгч"}
+            {token === "" ? "Нэвтрэх" : "Хэрэглэгч"}
           </p>
         </button>
       </div>
