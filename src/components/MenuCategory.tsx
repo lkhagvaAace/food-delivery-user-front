@@ -1,23 +1,26 @@
+import { SelectedCategoryContext } from "@/context/SelectedCategory";
 import { Category } from "@/types/CategoryType";
-import { getCategoriesFromDatabass } from "@/utilities/getCategories";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useContext } from "react";
 
-export const MenuCategory = ({ setSelectedCategory }: any) => {
-  const [categories, setCategoryies] = useState<Category[]>([]);
-  const getCategoriesFunction = (data: Category[]) => {
-    setCategoryies(data);
-  };
-  useEffect(() => {
-    getCategoriesFromDatabass(getCategoriesFunction);
-  }, []);
+export const MenuCategory = ({
+  categoryData,
+}: {
+  categoryData: Category[];
+}) => {
+  const { selectedCategory, setSelectedCategory } = useContext(
+    SelectedCategoryContext
+  );
   return (
     <div className="w-full h-fit py-8 px-8 justify-evenly flex flex-wrap">
-      {categories.length > 0 &&
-        categories.map((el) => {
+      {categoryData &&
+        categoryData.map((el) => {
           return (
             <button
+              key={el._id}
               onClick={() => setSelectedCategory(el._id)}
-              className="text-black flex justify-center items-center w-64 h-4 rounded-lg border-2 text-xl font-medium py-4 border-black border-solid"
+              className={`text-black ${
+                selectedCategory === el._id && "bg-green-500 text-white"
+              } flex justify-center items-center w-64 h-4 rounded-lg border-2 text-xl font-medium py-4 border-black border-solid`}
             >
               {el.name}
             </button>

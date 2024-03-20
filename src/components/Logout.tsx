@@ -1,13 +1,24 @@
+import { AlertVisibleContext } from "@/context/AlertVisiblity";
+import { AlertWordContext } from "@/context/AlertWord";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 
 export const Logout = ({ setIsLogOutVisible }: any) => {
   const router = useRouter();
+  const { alertVisible, setAlertVisible } = useContext(AlertVisibleContext);
+  const { alertWord, setAlertWord } = useContext(AlertWordContext);
   const logout = async () => {
     try {
       setIsLogOutVisible(false);
       localStorage.clear();
-      router.push("/login");
+      setAlertWord("Амжилттай гарлаа!");
+      setAlertVisible(true);
+      setTimeout(() => {
+        setAlertVisible(false);
+      }, 2000);
+      setTimeout(() => {
+        router.push("/login");
+      }, 2001);
     } catch (error) {
       console.error("error in logout", error);
     }

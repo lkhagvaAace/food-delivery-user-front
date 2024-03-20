@@ -4,35 +4,73 @@ import { useFormik } from "formik";
 import { signinUserSchema } from "@/Validations/SigninUserValidation";
 import { useRouter } from "next/router";
 import { isLoginVisibleContext } from "@/context/LoginVisiblity";
+import { AlertVisibleContext } from "@/context/AlertVisiblity";
+import { AlertWordContext } from "@/context/AlertWord";
 
 export const Loginbar = () => {
   const router = useRouter();
   const { isLoginVisible, setIsLoginVisible } = useContext(
     isLoginVisibleContext
   );
-  const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: signinUserSchema,
-    onSubmit: () => {},
-  });
+  const { alertVisible, setAlertVisible } = useContext(AlertVisibleContext);
+  const { alertWord, setAlertWord } = useContext(AlertWordContext);
+  const { values, errors, handleBlur, handleChange, handleSubmit, touched } =
+    useFormik({
+      initialValues: {
+        email: "",
+        password: "",
+      },
+      validationSchema: signinUserSchema,
+      onSubmit: () => {},
+    });
   const signIn = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (errors.email && errors.password) return alert("Not valid");
+    if (
+      errors.email ||
+      errors.password ||
+      values.email === "" ||
+      values.password === ""
+    ) {
+      setAlertWord("Шаардлага хангах утга оруулна уу!");
+      setAlertVisible(true);
+      setTimeout(() => {
+        setAlertVisible(false);
+      }, 2000);
+      return;
+    }
     try {
       const user = {
         email: values.email,
         password: values.password,
       };
       const res = await instance.post("/login", user);
-      if (res.status === 205) return alert("User Not Found");
-      if (res.status === 206) return alert("Wrong Password!");
+      if (res.status === 205) {
+        setAlertWord("Хэрэглэгч олдсонгүй!");
+        setAlertVisible(true);
+        setTimeout(() => {
+          setAlertVisible(false);
+        }, 2000);
+        return;
+      }
+      if (res.status === 206) {
+        setAlertWord("Нууц үг таарсангүй!");
+        setAlertVisible(true);
+        setTimeout(() => {
+          setAlertVisible(false);
+        }, 2000);
+        return;
+      }
       setIsLoginVisible(false);
       localStorage.setItem("accessToken", res.data.accessToken);
-      router.push("/");
-      return alert("successfully login");
+      setAlertWord("Амжилттай нэвтэрлээ!");
+      setAlertVisible(true);
+      setTimeout(() => {
+        setAlertVisible(false);
+      }, 2000);
+      setTimeout(() => {
+        router.push("/");
+      }, 2001);
+      return;
     } catch (error) {
       console.error("error in login", error);
     }
@@ -55,9 +93,11 @@ export const Loginbar = () => {
             placeholder="Имэйл хаягаа оруулна уу."
             className="bg-gray-200 w-80 h-12 rounded-lg text-black px-4"
           />
-          {errors.email ? (
-            <p className="text-red-500 text-lg">{errors.email}</p>
-          ) : null}
+          {touched.email && errors.email && (
+            <span className="text-red-500 text-sm font-semibold">
+              {errors.email}
+            </span>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <label className="text-gray-600">Нууц үг</label>
@@ -70,10 +110,16 @@ export const Loginbar = () => {
             placeholder="Нууц үгээ оруулна уу."
             className="bg-gray-200 w-80 h-12 rounded-lg text-black px-4"
           />
-          {errors.password ? (
-            <p className="text-red-500 text-lg">{errors.password}</p>
-          ) : null}
-          <button className="text-gray-600 w-full pr-0 flex justify-end">
+          {touched.password && errors.password && (
+            <span className="text-red-500 text-sm font-semibold">
+              {errors.password}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={() => router.push("/repassword")}
+            className="text-gray-600 w-full pr-0 flex justify-end"
+          >
             Нууц үг сэргээх
           </button>
         </div>
@@ -86,6 +132,7 @@ export const Loginbar = () => {
           Эсвэл
         </p>
         <button
+          type="button"
           onClick={() => router.push("/signup")}
           className="bg-white rounded-lg w-80 h-12 text-gray-600 border-2 border-green-600 border-solid"
         >

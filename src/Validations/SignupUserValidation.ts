@@ -12,5 +12,5 @@ export const signupUserSchema = yup.object().shape({
     .string()
     .oneOf([yup.ref("password")], "Password must match")
     .required("Required"),
-  phoneNumber: yup.number().min(70000000).max(99999999),
+  phoneNumber: yup.number().min(60000000).max(99999999),
 });

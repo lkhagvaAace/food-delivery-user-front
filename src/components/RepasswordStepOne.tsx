@@ -1,35 +1,43 @@
 import { instance } from "@/Instance";
 import { emailSchema } from "@/Validations/emailSchema";
-import axios from "axios";
 import { useFormik } from "formik";
 import React from "react";
 type StateType = {
   setStep: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const RepasswordStepOne = ({ setStep, setCode, setUserId }: any) => {
-  const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
-    initialValues: {
-      email: "",
-    },
-    validationSchema: emailSchema,
-    onSubmit: () => {},
-  });
+export const RepasswordStepOne = ({
+  setStep,
+  setCode,
+  setUserId,
+  setAlertVisible,
+  setAlertWord,
+}: any) => {
+  const { values, errors, handleBlur, handleChange, handleSubmit, touched } =
+    useFormik({
+      initialValues: {
+        email: "",
+      },
+      validationSchema: emailSchema,
+      onSubmit: () => {},
+    });
   const verifyingEmail = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      if (errors.email) return false;
+      if (errors.email) return;
       const mail = {
         email: values.email,
       };
       const res = await instance.post("/verifyEmail", mail);
-      if (res.status === 404) {
-        return alert("User Not Found");
-      }
       setCode(res.data.code);
       setUserId(res.data._id);
       return setStep(2);
     } catch (error) {
+      setAlertWord("Хэрэглэгч олдсонгүй!");
+      setAlertVisible(true);
+      setTimeout(() => {
+        setAlertVisible(false);
+      }, 2000);
       console.error("error in verifyEmail", error);
     }
   };
@@ -52,7 +60,7 @@ export const RepasswordStepOne = ({ setStep, setCode, setUserId }: any) => {
             placeholder="Имэйл хаягаа оруулна уу."
             className="bg-gray-200 w-80 h-12 rounded-lg text-black px-4"
           />
-          {errors.email ? (
+          {errors.email && touched.email ? (
             <p className="text-lg text-red-500 font-semibold">{errors.email}</p>
           ) : null}
         </div>

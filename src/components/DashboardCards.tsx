@@ -5,7 +5,7 @@ import React from "react";
 
 export const DashboardCards = () => {
   return (
-    <div className={`w-full flex items-center justify-between px-32 `}>
+    <div className={`w-full flex items-center justify-between px-32 mt-12`}>
       <div className="flex flex-col pl-8 py-4 w-1/5 h-32 rounded-lg shadow-xl gap-4">
         <Book />
         <div className="flex flex-col">

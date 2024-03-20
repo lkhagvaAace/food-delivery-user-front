@@ -1,65 +1,78 @@
-import { OrderContext } from "@/context/OrderContext";
-import React, { useContext } from "react";
-
-type foodData = {
-  id: number;
-  foodName: string;
-  price: number;
-  img: string;
-  categoryName: string;
-  count: number;
+import { User } from "@/types/UserType";
+import { Food } from "@/types/foodType";
+import React from "react";
+type Order = {
+  foods: Food[];
+  orderNumber: number;
+  process: string;
+  totalPrice: number;
+  userId: User;
+  _id: string;
+  createdDate: string;
 };
-type ThemContextType = {
-  order: foodData[][];
-  setOrder: React.Dispatch<React.SetStateAction<foodData[][]>>;
-};
-const currentDate = new Date();
 
-export const Orderhistory = () => {
+export const Orderhistory = (orders: any) => {
+  const order: Order[] = orders.orders;
   return (
     <div className="flex justify-between w-2/3 items-center my-16 gap-16">
       <div className="rounded-lg w-1/2 h-[700px] shadow-2xl text-black p-8 flex flex-col">
         <p className="text-xl py-4">Захиалгын түүх</p>
-        <div className="flex flex-col justify-center items-center">
-          {/* {order?.map((el) => {
-            return (
-              <div className="flex items-center justify-between w-full gap-8">
-                <div className="flex gap-4 items-center">
-                  <button className="w-12 h-12 rounded-[50%] bg-blue-500"></button>
-                  <div className="flex flex-col">
-                    <p>
-                      Захиалга #
-                      {el.reduce((acc, cur) => acc + cur.price * cur.count, 0)}
-                    </p>
-                    <p className="text-blue-500">Хүлээгдэж буй</p>
+        <div className="flex w-full flex-col justify-center items-center overflow-y-scroll pt-12">
+          {order.length > 0 &&
+            order.map((el) => {
+              return (
+                <div className="flex flex-col w-full h-24">
+                  <div
+                    key={el._id}
+                    className="flex justify-between w-full h-32 items-center"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div
+                        className={`w-12 h-12 flex justify-center items-center ${
+                          el.process === "Waiting" &&
+                          "border-[1px] border-solid border-blue-600 rounded-[50%]"
+                        }`}
+                      >
+                        <div
+                          className={`${
+                            el.process === "Waiting" && "bg-blue-600"
+                          } w-4 h-4 rounded-[50%]`}
+                        ></div>
+                      </div>
+                      <div className="flex flex-col justify-center">
+                        <p className="text-black">Захиалга #{el.orderNumber}</p>
+                        <p className="text-blue-600">
+                          {el.process === "Waiting" && "Хүлээгдэж байна"}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-black">{el.createdDate}</p>
                   </div>
+                  <div className="bg-blue-600 h-[1px] w-full"></div>
                 </div>
-                <p className="w-1/3">{`${currentDate.getFullYear()}/ ${
-                  currentDate.getMonth() + 1
-                } / ${currentDate.getDate()}`}</p>
-              </div>
-            );
-          })} */}
+              );
+            })}
         </div>
       </div>
       <div className="rounded-lg w-1/2 h-[700px] shadow-2xl text-black p-8 flex flex-col">
         <p className="text-xl py-4">Захиалгын дэлгэрэнгүй</p>
-        <div className="flex flex-col justify-center items-center gap-8">
-          {/* {order?.map((el) => {
-            return (
-              <div className="flex flex-col items-center justify-between w-full h-12">
-                {el?.map((foodName) => {
-                  return (
-                    <div className="flex w-full justify-between">
-                      <p>{foodName.foodName}</p>
-                      <p>({foodName.count})</p>
-                    </div>
-                  );
-                })}
-                <hr></hr>
-              </div>
-            );
-          })} */}
+        <div className="flex flex-col justify-center items-center overflow-y-scroll pt-36">
+          {order.length > 0 &&
+            order.map((el) => {
+              return (
+                <div className="flex flex-col w-full h-24 pt-16">
+                  {el.foods.length > 0 &&
+                    el.foods.map((element) => {
+                      return (
+                        <div className="text-black flex justify-between w-full h-32">
+                          <p>{element.name}</p>
+                          <p>({element.count})</p>
+                        </div>
+                      );
+                    })}
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>

@@ -1,11 +1,15 @@
 import { instance } from "@/Instance";
 import { passwordSchema } from "@/Validations/changePassword";
+import { AlertVisibleContext } from "@/context/AlertVisiblity";
+import { AlertWordContext } from "@/context/AlertWord";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 
 export const RepasswordStepThree = ({ userId }: any) => {
   const router = useRouter();
+  const { alertVisible, setAlertVisible } = useContext(AlertVisibleContext);
+  const { alertWord, setAlertWord } = useContext(AlertWordContext);
   const { values, errors, handleBlur, handleChange, handleSubmit } = useFormik({
     initialValues: {
       password: "",
@@ -23,8 +27,14 @@ export const RepasswordStepThree = ({ userId }: any) => {
     try {
       const res = await instance.put("/changePassword", user);
       if (res.status != 200) return alert("Failed to update");
-      alert("Successfully updated!");
-      return router.push("/login");
+      setAlertWord("Нууц үг амжиллтай шинэчлэгдлээ!");
+      setAlertVisible(true);
+      setTimeout(() => {
+        setAlertVisible(false);
+      }, 2000);
+      setTimeout(() => {
+        router.push("/login");
+      }, 2001);
     } catch (error) {
       console.error("error in changepassword", error);
     }

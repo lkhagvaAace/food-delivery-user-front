@@ -1,12 +1,28 @@
 import React, { useState } from "react";
 
-export const RepasswordStepTwo = ({ setStep, code }: any) => {
+export const RepasswordStepTwo = ({
+  setStep,
+  code,
+  setAlertVisible,
+  setAlertWord,
+}: any) => {
   const [authCode, setAuthCode] = useState<any>(0);
-  console.log(code);
   const auth = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      if (code != authCode) return alert("Wrong code!");
+      if (code != authCode) {
+        setAlertWord("Баталгаажуулах код буруу байна!");
+        setAlertVisible(true);
+        setTimeout(() => {
+          setAlertVisible(false);
+        }, 2000);
+        return;
+      }
+      setAlertWord("Баталгаажуулах код таарлаа!");
+      setAlertVisible(true);
+      setTimeout(() => {
+        setAlertVisible(false);
+      }, 2000);
       return setStep(3);
     } catch (error) {
       console.error(error);

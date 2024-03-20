@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Out } from "../../Out";
 import { History } from "@/svg/History";
 import { Edit } from "@/svg/Edit";
@@ -9,17 +9,24 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import { SignupFormValues } from "@/types/signupType";
 import { signupUserSchema } from "@/Validations/SignupUserValidation";
-import { instance } from "@/Instance";
 import { edit } from "@/utilities/editUser";
+import { AlertVisibleContext } from "@/context/AlertVisiblity";
+import { AlertWordContext } from "@/context/AlertWord";
 
-export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
+export const Profilesection = ({
+  userInfo,
+  setIsLogOutVisible,
+  setLoading,
+}: any) => {
   const router = useRouter();
   const [onEdit, setOnEdit] = useState(false);
-  const [img, setImg] = useState({});
-  const { values, errors, handleBlur, handleChange, handleSubmit } =
+  const [img, setImg] = useState<any>(userInfo.avatarImg);
+  const { alertVisible, setAlertVisible } = useContext(AlertVisibleContext);
+  const { alertWord, setAlertWord } = useContext(AlertWordContext);
+  const { values, errors, handleBlur, handleChange, handleSubmit, touched } =
     useFormik<SignupFormValues>({
       initialValues: {
-        email: userInfo.name,
+        email: userInfo.email,
         name: userInfo.name,
         password: "",
         confirmPassword: "",
@@ -30,7 +37,19 @@ export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
     });
   return (
     <form
-      onSubmit={(e) => edit(e, values, img, userInfo._id)}
+      onSubmit={(e) =>
+        edit(
+          e,
+          values,
+          userInfo,
+          img,
+          userInfo._id,
+          setLoading,
+          setAlertVisible,
+          setAlertWord,
+          setOnEdit
+        )
+      }
       className={`flex flex-col justify-center items-center gap-4 w-full h-full pb-16`}
     >
       <div className="w-fit h-fit flex flex-col relative">
@@ -38,14 +57,21 @@ export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
           src={`${userInfo.avatarImg}`}
           className="rounded-[50%] w-32 h-32 border-[1px] border-black border-solid"
         />
-        <button className="p-2 rounded-[50%] bg-white z-30 absolute mt-20 ml-24 shadow-2xl shadow-black">
+        <button
+          type="button"
+          onClick={() => setOnEdit(true)}
+          className="p-2 rounded-[50%] bg-white z-30 absolute mt-20 ml-24 shadow-2xl shadow-black"
+        >
           <Edit />
         </button>
         <input
           id="file"
           type="file"
-          className="w-32 bg-black"
-          onChange={(e) => setImg(e.target.files[0])}
+          className={`w-32 bg-black ${onEdit ? "flex" : "hidden"}`}
+          onChange={(e) => {
+            if (!e.target.files) return;
+            setImg(e.target.files[0]);
+          }}
         />
       </div>
       <p className="text-black font-medium text-2xl">{userInfo.name}</p>
@@ -64,7 +90,6 @@ export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
             ) : (
               <input
                 id="name"
-                value={values.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 type="text"
@@ -74,11 +99,17 @@ export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
             )}
           </div>
         </div>
-        <div className="w-8 h-8" onClick={() => setOnEdit(true)}>
+        <button
+          type="button"
+          className="w-8 h-8"
+          onClick={() => setOnEdit(true)}
+        >
           <Edit />
-        </div>
+        </button>
       </div>
-      {errors.name && <p className="text-red-500">{errors.name}</p>}
+      {errors.name && touched.name && (
+        <p className="text-red-500">{errors.name}</p>
+      )}
       <div className="flex justify-between px-8 w-1/4 border-gray-400 border-[1px] border-solid rounded-lg  py-2 h-16 bg-gray-100 items-center">
         <div className="flex gap-4 items-center justify-center">
           <Phonenumber />
@@ -88,13 +119,16 @@ export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
               <input
                 disabled
                 type="number"
-                defaultValue={userInfo.phoneNumber}
                 className="text-black bg-gray-100"
+                defaultValue={
+                  userInfo.phoneNumber == 0
+                    ? "Та утасны дугаар бүртгэлгүй байна."
+                    : userInfo.phoneNumber
+                }
               />
             ) : (
               <input
                 id="phoneNumber"
-                value={values.phoneNumber}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 type="number"
@@ -104,11 +138,15 @@ export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
             )}
           </div>
         </div>
-        <div className="w-8 h-8" onClick={() => setOnEdit(true)}>
+        <button
+          type="button"
+          className="w-8 h-8"
+          onClick={() => setOnEdit(true)}
+        >
           <Edit />
-        </div>
+        </button>
       </div>
-      {errors.phoneNumber && (
+      {errors.phoneNumber && touched.phoneNumber && (
         <p className={`text-red-500`}>Wrong phonenumber</p>
       )}
       <div className="flex justify-between px-8 w-1/4 border-gray-400 border-[1px] border-solid rounded-lg py-2 bg-gray-100 items-center">
@@ -126,44 +164,62 @@ export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
             ) : (
               <input
                 id="email"
-                value={values.email}
+                defaultValue={userInfo.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 type="text"
-                defaultValue={userInfo.email}
                 className="text-black bg-gray-100"
               />
             )}
           </div>
         </div>
-        <div className="w-8 h-8" onClick={() => setOnEdit(true)}>
+        <button
+          type="button"
+          className="w-8 h-8"
+          onClick={() => setOnEdit(true)}
+        >
           <Edit />
-        </div>
+        </button>
       </div>
-      {errors.email && (
+      {errors.email && touched.email && (
         <p className={`${errors.email && "text-red-500"}`}>{errors.email}</p>
       )}
       {onEdit === true ? (
-        errors.email || errors.name || errors.phoneNumber ? (
+        <div className="flex flex-col w-full justify-center items-center">
+          {(errors.email && touched.email) ||
+          (errors.name && touched.name) ||
+          (errors.phoneNumber && touched.phoneNumber) ? (
+            <button
+              disabled
+              className="flex justify-center items-center px-8 w-1/4 border-gray-400 h-16 py-8 bg-gray-300 rounded-lg"
+            >
+              Хадгалах
+            </button>
+          ) : (
+            <button
+              type="submit"
+              className="flex justify-center items-center px-8 w-1/4 border-gray-400 h-16 py-8 bg-[#18BA51] rounded-lg"
+            >
+              Хадгалах
+            </button>
+          )}
+          <p className="rounded-lg w-80 h-12 text-gray-600 flex justify-center items-center">
+            Эсвэл
+          </p>
           <button
-            disabled
-            className="flex justify-center items-center px-8 w-1/4 border-gray-400 h-16 py-8 bg-gray-300 rounded-lg"
+            type="button"
+            onClick={() => setOnEdit(false)}
+            className="bg-white rounded-lg w-1/4 h-16 text-gray-600 border-2 border-green-600 border-solid"
           >
-            Хадгалах
+            Болих
           </button>
-        ) : (
-          <button
-            type="submit"
-            className="flex justify-center items-center px-8 w-1/4 border-gray-400 h-16 py-8 bg-[#18BA51] rounded-lg"
-          >
-            Хадгалах
-          </button>
-        )
+        </div>
       ) : (
         <div className="w-full items-center gap-4 flex flex-col">
           <div className="flex gap-4 w-1/4 items-center">
             <History />
             <button
+              type="button"
               onClick={() => {
                 router.push("/history");
               }}
@@ -172,13 +228,14 @@ export const Profilesection = ({ userInfo, setIsLogOutVisible }: any) => {
               Захиалгийн түүх
             </button>
           </div>
-          <div
+          <button
+            type="button"
             onClick={() => setIsLogOutVisible(true)}
             className="flex gap-4 w-1/4 items-center cursor-pointer"
           >
             <Out />
             <p className="text-black">Гарах</p>
-          </div>
+          </button>
         </div>
       )}
     </form>
