@@ -1,4 +1,4 @@
-import { User } from "@/types/UserType";
+import { User } from "@/types/userType";
 import { Food } from "@/types/foodType";
 import React from "react";
 type Order = {
