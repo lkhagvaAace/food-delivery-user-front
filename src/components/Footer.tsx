@@ -41,9 +41,6 @@ export const Footer = (props: Props) => {
         >
           Үйлчилгээний нөхцөл
         </button>
-        <button className="text-white text-xl font-medium">
-          Хүргэлтийн бүс
-        </button>
         <button
           onClick={() => router.push("/footerinfo")}
           className="text-white text-xl font-medium"

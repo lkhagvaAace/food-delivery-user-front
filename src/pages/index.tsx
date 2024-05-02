@@ -18,6 +18,9 @@ import { Food } from "@/types/foodType";
 import { Category } from "@/types/CategoryType";
 import { Alert } from "@/components/Alert";
 import { AlertVisibleContext } from "@/context/AlertVisiblity";
+import { QrVisibleContext } from "@/context/QrVisiblity";
+import { Qr } from "@/components/Qr";
+import { InvoiceContext } from "@/context/InvoiceContext";
 
 const Index = ({
   foodData,
@@ -38,12 +41,15 @@ const Index = ({
   const { isLoginVisible, setIsLoginVisible } = useContext(
     isLoginVisibleContext
   );
+  const { qrVisible, setQrVisible } = useContext(QrVisibleContext);
   const { alertVisible, setAlertVisible } = useContext(AlertVisibleContext);
   const { selectedFoods, setSelectedFoods } = useContext(SelectedFoodContext);
   const [newInBasket, setNewInBasket] = useState<boolean>(false);
+  const { invoice, setInvoice } = useContext(InvoiceContext);
 
   return (
-    <div className="w-full relative min-h-screen flex justify-center items-center">
+    <div className="w-full relative min-h-screen flex justify-center">
+      {invoice.invoice_id && <Qr invoice={invoice} setInvoice={setInvoice} />}
       {isBasketBarVisible === true ? <Basket /> : false}
       {isFoodDetailVisible === true ? <FooddetailBar /> : false}
       {isLoginVisible === true ? <Loginbar /> : false}

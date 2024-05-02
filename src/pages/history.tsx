@@ -5,7 +5,9 @@ import { Header } from "@/components/Header";
 import { LoadingPage } from "@/components/LoadingPage";
 import { Loginbar } from "@/components/Loginbar";
 import { Orderhistory } from "@/components/Orderhistory";
+import { Qr } from "@/components/Qr";
 import { isBasketBarVisibleContext } from "@/context/BasketContext";
+import { InvoiceContext } from "@/context/InvoiceContext";
 import { isLoginVisibleContext } from "@/context/LoginVisiblity";
 import { Food } from "@/types/foodType";
 import React, { useContext, useEffect, useState } from "react";
@@ -31,12 +33,14 @@ const history = () => {
       console.error("error in getOrders", error);
     }
   };
+  const { invoice, setInvoice } = useContext(InvoiceContext);
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     getOrders(token);
   }, []);
   return (
-    <div className="w-full relative min-h-screen flex justify-center items-center">
+    <div className="w-full relative min-h-screen flex justify-center">
+      {invoice.invoice_id && <Qr invoice={invoice} setInvoice={setInvoice} />}
       {isBasketBarVisible === true && <Basket />}
       {isLoginVisible === true && <Loginbar />}
       <div

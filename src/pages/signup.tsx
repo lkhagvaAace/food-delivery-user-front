@@ -69,12 +69,6 @@ const Signup = () => {
         onSubmit={(e) => {
           if (!touched.name || !touched.email || !touched.confirmPassword) {
             e.preventDefault();
-            console.log(
-              !touched.name,
-              !touched.email,
-              !touched.password,
-              !touched.confirmPassword
-            );
             setAlertWord("Утгуудаа оруулна уу!");
             setAlertVisible(true);
             setTimeout(() => {

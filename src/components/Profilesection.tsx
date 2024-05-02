@@ -52,7 +52,7 @@ export const Profilesection = ({
       }
       className={`flex flex-col justify-center items-center gap-4 w-full h-full pb-16`}
     >
-      <div className="w-fit h-fit flex flex-col relative">
+      <label className="w-fit h-fit flex flex-col relative">
         <img
           src={`${userInfo.avatarImg}`}
           className="rounded-[50%] w-32 h-32 border-[1px] border-black border-solid"
@@ -65,6 +65,7 @@ export const Profilesection = ({
           <Edit />
         </button>
         <input
+          hidden
           id="file"
           type="file"
           className={`w-32 bg-black ${onEdit ? "flex" : "hidden"}`}
@@ -73,7 +74,7 @@ export const Profilesection = ({
             setImg(e.target.files[0]);
           }}
         />
-      </div>
+      </label>
       <p className="text-black font-medium text-2xl">{userInfo.name}</p>
       <div className="flex justify-between px-8 w-1/4 border-gray-400 border-[1px] border-solid rounded-lg py-2 h-16 bg-gray-100 items-center">
         <div className="flex gap-4 items-center justify-center">

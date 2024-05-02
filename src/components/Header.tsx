@@ -63,9 +63,6 @@ export const Header = ({
         >
           ХООЛНЫ ЦЭС
         </button>
-        <button className={`text-black font-semibold w-fit h-8`}>
-          ХҮРГЭЛТИЙН БҮС
-        </button>
       </nav>
       <div className="flex justify-center items-center gap-16">
         <input

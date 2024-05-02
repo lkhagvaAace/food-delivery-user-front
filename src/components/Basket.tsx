@@ -1,12 +1,14 @@
 import { AlertVisibleContext } from "@/context/AlertVisiblity";
 import { AlertWordContext } from "@/context/AlertWord";
 import { isBasketBarVisibleContext } from "@/context/BasketContext";
+import { InvoiceContext } from "@/context/InvoiceContext";
 import { NewInBasketContext } from "@/context/NewInBaskter";
 import { SelectedFoodContext } from "@/context/SelectedFoodContext";
 import { Cancel } from "@/svg/Cancel";
 import { Leftarrow } from "@/svg/Leftarrow";
 import { Food } from "@/types/foodType";
 import { createOrder } from "@/utilities/createOrder";
+import { putIntoBasket } from "@/utilities/putIntoBasket";
 import { useRouter } from "next/router";
 import React, {
   Dispatch,
@@ -26,6 +28,7 @@ export const Basket = () => {
   const { isBasketBarVisible, setIsBasketBarVisible } = useContext(
     isBasketBarVisibleContext
   );
+  const { invoice, setInvoice } = useContext(InvoiceContext);
   const { alertVisible, setAlertVisible } = useContext(AlertVisibleContext);
   const { alertWord, setAlertWord } = useContext(AlertWordContext);
   const [token, setToken] = useState<string | null>("");
@@ -37,39 +40,6 @@ export const Basket = () => {
       return el._id !== id;
     });
     setSelectedFoods(newBasketFood);
-  };
-  const countChange = (data: Food, type: string) => {
-    const newArray: Food[] = selectedFoods.filter((el: Food) => {
-      return el._id != data._id;
-    });
-    const minusFood: Food = {
-      _id: data._id,
-      name: data.name,
-      price: data.price,
-      img: data.img,
-      category: data.category,
-      count: data.count - 1,
-      _v: 0,
-      isSale: data.isSale,
-      ingredients: data.ingredients,
-    };
-    const plusFood: Food = {
-      _id: data._id,
-      name: data.name,
-      price: data.price,
-      img: data.img,
-      category: data.category,
-      count: data.count + 1,
-      _v: 0,
-      isSale: data.isSale,
-      ingredients: data.ingredients,
-    };
-    if (type === "minus" && data.count > 1) {
-      setSelectedFoods([...newArray, minusFood]);
-    }
-    if (type === "sum") {
-      setSelectedFoods([...newArray, plusFood]);
-    }
   };
   const countingTotal = useMemo(() => {
     const sum: number = selectedFoods.reduce(
@@ -86,7 +56,7 @@ export const Basket = () => {
   }, []);
   const ordering = async () => {
     try {
-      createOrder(selectedFoods, token);
+      createOrder(selectedFoods, token, total, setInvoice);
       setAlertWord("Амжилттай захиалга хийгдлээ!");
       setAlertVisible(true);
       setTimeout(() => {
@@ -155,7 +125,12 @@ export const Basket = () => {
                       <div className="flex justify-between w-1/2 items-center gap-2">
                         <button
                           onClick={() => {
-                            countChange(data, "minus");
+                            putIntoBasket(
+                              data,
+                              false,
+                              selectedFoods,
+                              setSelectedFoods
+                            );
                           }}
                           className="text-white bg-green-500 w-16 h-12 rounded-lg justify-center items-center font-semibold text-3xl flex"
                         >
@@ -166,7 +141,12 @@ export const Basket = () => {
                         </p>
                         <button
                           onClick={() => {
-                            countChange(data, "sum");
+                            putIntoBasket(
+                              data,
+                              true,
+                              selectedFoods,
+                              setSelectedFoods
+                            );
                           }}
                           className="text-white bg-green-500 w-16 h-12 rounded-lg justify-center items-center font-semibold text-3xl flex"
                         >

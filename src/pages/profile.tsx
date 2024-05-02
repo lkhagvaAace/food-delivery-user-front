@@ -12,12 +12,15 @@ import { jwtDecode } from "jwt-decode";
 import { LoadingPage } from "@/components/LoadingPage";
 import { AlertVisibleContext } from "@/context/AlertVisiblity";
 import { Alert } from "@/components/Alert";
+import { InvoiceContext } from "@/context/InvoiceContext";
+import { Qr } from "@/components/Qr";
 
 const profile = () => {
   const router = useRouter();
   const { isBasketBarVisible, setIsBasketBarVisible } = useContext(
     isBasketBarVisibleContext
   );
+  const { invoice, setInvoice } = useContext(InvoiceContext);
   const [isLogOutVisible, setIsLogOutVisible] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(true);
@@ -57,6 +60,7 @@ const profile = () => {
   }, []);
   return (
     <div className="bg-white min-h-screen flex flex-col items-center justify-between gap-8">
+      {invoice.invoice_id && <Qr invoice={invoice} setInvoice={setInvoice} />}
       <Header selectedFoodsLength={0} />
       {isBasketBarVisible === true ? <Basket /> : null}
       {isLogOutVisible === true && (

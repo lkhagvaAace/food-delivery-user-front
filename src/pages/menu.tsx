@@ -8,9 +8,11 @@ import { LoadingPage } from "@/components/LoadingPage";
 import { Loginbar } from "@/components/Loginbar";
 import { MenuCategory } from "@/components/MenuCategory";
 import { MenuFoodBar } from "@/components/MenuFoodBar";
+import { Qr } from "@/components/Qr";
 import { AlertVisibleContext } from "@/context/AlertVisiblity";
 import { isBasketBarVisibleContext } from "@/context/BasketContext";
 import { isFoodDetailVisibleContext } from "@/context/FDVisiblityContext";
+import { InvoiceContext } from "@/context/InvoiceContext";
 import { isLoginVisibleContext } from "@/context/LoginVisiblity";
 import { SelectedCategoryContext } from "@/context/SelectedCategory";
 import { Category } from "@/types/CategoryType";
@@ -36,9 +38,11 @@ const Menu = ({
   const { selectedCategory, setSelectedCategory } = useContext(
     SelectedCategoryContext
   );
+  const { invoice, setInvoice } = useContext(InvoiceContext);
   const { alertVisible, setAlertVisible } = useContext(AlertVisibleContext);
   return (
     <div className="w-full relative min-h-screen flex justify-center items-center">
+      {invoice.invoice_id && <Qr invoice={invoice} setInvoice={setInvoice} />}
       {isBasketBarVisible === true ? <Basket /> : null}
       {isFoodDetailVisible === true ? <FooddetailBar /> : null}
       {isLoginVisible === true ? <Loginbar /> : null}
