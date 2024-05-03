@@ -48,10 +48,13 @@ export const edit = async (
       formData.append("image", img);
       formData.append("user", JSON.stringify(firstUser));
     }
-    const res = await fetch("http://localhost:8080/updateUser", {
-      method: "PUT",
-      body: formData,
-    });
+    const res = await fetch(
+      "https://food-delivery-back-1.onrender.com/updateUser",
+      {
+        method: "PUT",
+        body: formData,
+      }
+    );
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setLoading(false);
     if (res.status == 200) {
